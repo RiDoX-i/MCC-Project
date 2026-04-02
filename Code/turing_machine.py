@@ -7,12 +7,14 @@ DROITE = "R"
 IMMOBILE = "S"
 
 
+#--------------------------------------------------------- Question 1 ---------------------------------------------------------
+
 @dataclass
 class MT:
 
     k: int # nombre de rubans
     etats: set
-    
+
     # alphabets
     alphabet_entree: set
     alphabet_travail: set
@@ -29,6 +31,38 @@ class MT:
         Tuple[str, Tuple[str, ...]],
         Tuple[str, Tuple[str, ...], Tuple[str, ...]]
     ] = field(default_factory=dict)
+
+
+@dataclass
+class Configuration:
+    # état courant
+    etat: str
+
+    # un ruban = dictionnaire position -> symbole
+    # on utilise une représentation creuse pour simuler un ruban infini
+    rubans: List[Dict[int, str]]
+
+    # position de la tête sur chaque ruban
+    tetes: List[int]
+
+    def lire(self, i: int) -> str:
+        return self.rubans[i].get(self.tetes[i], BLANC)
+
+    def ecrire(self, i: int, symbole: str) -> None:
+        if symbole == BLANC:
+            self.rubans[i].pop(self.tetes[i], None)
+        else:
+            self.rubans[i][self.tetes[i]] = symbole
+
+    def deplacer(self, i: int, mouvement: str) -> None:
+        if mouvement == DROITE:
+            self.tetes[i] += 1
+        elif mouvement == GAUCHE:
+            self.tetes[i] -= 1
+        elif mouvement == IMMOBILE:
+            pass
+        else:
+            raise ValueError(f"Mouvement invalide : {mouvement}")
 
 
 #--------------------------------------------------------- Question 2 ---------------------------------------------------------
@@ -116,36 +150,3 @@ def lire_machine_tms(path: str) -> MT:
 def configuration_initiale(machine: MT, mot: str) -> "Configuration":
     return Configuration(machine.etat_initial, [{i: c for i, c in enumerate(mot)}], [0])
 #------------------------------------------------------------------------------------------------------------------------------
-
-
-
-@dataclass
-class Configuration:
-    # état courant
-    etat: str
-
-    # un ruban = dictionnaire position -> symbole
-    # on utilise une représentation creuse pour simuler un ruban infini
-    rubans: List[Dict[int, str]]
-
-    # position de la tête sur chaque ruban
-    tetes: List[int]
-
-    def lire(self, i: int) -> str:
-        return self.rubans[i].get(self.tetes[i], BLANC)
-
-    def ecrire(self, i: int, symbole: str) -> None:
-        if symbole == BLANC:
-            self.rubans[i].pop(self.tetes[i], None)
-        else:
-            self.rubans[i][self.tetes[i]] = symbole
-
-    def deplacer(self, i: int, mouvement: str) -> None:
-        if mouvement == DROITE:
-            self.tetes[i] += 1
-        elif mouvement == GAUCHE:
-            self.tetes[i] -= 1
-        elif mouvement == IMMOBILE:
-            pass
-        else:
-            raise ValueError(f"Mouvement invalide : {mouvement}")
