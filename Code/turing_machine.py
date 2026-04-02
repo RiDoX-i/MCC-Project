@@ -149,4 +149,26 @@ def lire_machine_tms(path: str) -> MT:
 
 def configuration_initiale(machine: MT, mot: str) -> "Configuration":
     return Configuration(machine.etat_initial, [{i: c for i, c in enumerate(mot)}], [0])
+
+
+#--------------------------------------------------------- Question 3 ---------------------------------------------------------
+
+def executer_un_pas(machine: MT, config: Configuration) -> bool:
+    if len(config.rubans) != machine.k or len(config.tetes) != machine.k:
+        raise ValueError("Configuration invalide : nombre de rubans/tetes incoherent avec la machine")
+
+    symboles_lus = tuple(config.lire(i) for i in range(machine.k))
+    transition = machine.transitions.get((config.etat, symboles_lus))
+    if transition is None:
+        return False
+
+    nouvel_etat, symboles_ecrits, mouvements = transition
+    if len(symboles_ecrits) != machine.k or len(mouvements) != machine.k:
+        raise ValueError("Transition invalide : arite incompatible avec le nombre de rubans")
+
+    for i in range(machine.k):
+        config.ecrire(i, symboles_ecrits[i])
+        config.deplacer(i, mouvements[i])
+    config.etat = nouvel_etat
+    return True
 #------------------------------------------------------------------------------------------------------------------------------

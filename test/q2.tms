@@ -1,0 +1,5 @@
+name: q2-min
+init: I
+accept: F
+I,0,F,1,>
+I,_,F,_,-
