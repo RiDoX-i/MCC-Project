@@ -9,12 +9,10 @@ IMMOBILE = "S"
 
 @dataclass
 class MT:
-    # nombre de rubans
-    k: int
 
-    # ensemble des états (optionnel pour la simulation, mais utile pour valider)
+    k: int # nombre de rubans
     etats: set
-
+    
     # alphabets
     alphabet_entree: set
     alphabet_travail: set
@@ -34,9 +32,7 @@ class MT:
 
 
 #--------------------------------------------------------- Question 2 ---------------------------------------------------------
-# initialise une instance de MT à partir d'un fichier au format turingmachinesimulator.com
-# crée ensuite la configuration initiale à partir du mot d'entrée et de la machine
-# Syntaxe attendue : name, init, accept, puis delta en deux lignes ou une ligne.
+
 def lire_machine_tms(path: str) -> MT:
     with open(path, encoding="utf-8") as f:
         lignes = [l.strip() for l in f if l.strip() and not l.strip().startswith("//")]
@@ -67,13 +63,22 @@ def lire_machine_tms(path: str) -> MT:
             etat, lecture = parts
             if i + 1 >= len(lignes):
                 raise ValueError("Format TMS invalide : transition incomplète")
-            etat2, ecriture, mouv = [p.strip() for p in lignes[i + 1].split(",")]
+            next_parts = [p.strip() for p in lignes[i + 1].split(",")]
+            if len(next_parts) != 3:
+                raise ValueError(f"Ligne TMS invalide : {lignes[i + 1]}")
+            etat2, ecriture, mouv = next_parts
             i += 2
         elif len(parts) == 5:
             etat, lecture, etat2, ecriture, mouv = parts
             i += 1
         else:
             raise ValueError(f"Ligne TMS invalide : {ligne}")
+
+        # Parseur mono-ruban : chaque symbole lu/écrit doit être un symbole unique
+        # (ou "_" pour le blanc dans le format TMS).
+        if len(lecture) != 1 or len(ecriture) != 1:
+            raise ValueError("Ce parseur TMS ne gère que les transitions à 1 ruban")
+
         lecture = BLANC if lecture == "_" else lecture
         ecriture = BLANC if ecriture == "_" else ecriture
         if mouv == ">":
@@ -84,14 +89,20 @@ def lire_machine_tms(path: str) -> MT:
             dep = IMMOBILE
         else:
             raise ValueError(f"Mouvement invalide : {mouv}")
-        transitions[(etat, (lecture,))] = (etat2, (ecriture,), (dep,))
+        cle = (etat, (lecture,))
+        if cle in transitions:
+            raise ValueError(f"Transition dupliquée pour {cle}")
+        transitions[cle] = (etat2, (ecriture,), (dep,))
         etats.update({etat, etat2})
-        alphabet_entree.add(lecture)
+        if lecture != BLANC:
+            alphabet_entree.add(lecture)
         alphabet_travail.update({lecture, ecriture})
     if init is None:
         raise ValueError("Fichier TMS sans init")
     if not accept:
         raise ValueError("Fichier TMS sans accept")
+    if len(accept) != 1:
+        raise ValueError("Fichier TMS invalide : un unique état final est attendu")
     return MT(
         1,
         etats,
@@ -102,8 +113,7 @@ def lire_machine_tms(path: str) -> MT:
         transitions=transitions,
     )
 
-# fonction de création de la configuration initiale à partir du mot d'entrée et de la machine.
-def configuration_initiale(machine: MT, mot: str) -> Configuration:
+def configuration_initiale(machine: MT, mot: str) -> "Configuration":
     return Configuration(machine.etat_initial, [{i: c for i, c in enumerate(mot)}], [0])
 #------------------------------------------------------------------------------------------------------------------------------
 
