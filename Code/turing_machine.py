@@ -172,3 +172,14 @@ def executer_un_pas(machine: MT, config: Configuration) -> bool:
     config.etat = nouvel_etat
     return True
 #------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------- Question 4 ---------------------------------------------------------
+
+def simuler(machine: MT, mot: str) -> Configuration:
+    config = configuration_initiale(machine, mot)
+
+    while config.etat != machine.etat_final:
+        ok = executer_un_pas(machine, config)
+        if not ok:
+            break
+
+    return config
