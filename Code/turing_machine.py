@@ -183,3 +183,43 @@ def simuler(machine: MT, mot: str) -> Configuration:
             break
 
     return config
+#--------------------------------------------------------- Question 5 ---------------------------------------------------------
+
+def afficher_configuration(config: Configuration):
+    print("Etat :", config.etat)
+    
+    for i in range(len(config.rubans)):
+        ruban = config.rubans[i]
+        tete = config.tetes[i]
+
+        if ruban:
+            min_i = min(ruban.keys())
+            max_i = max(ruban.keys())
+        else:
+            min_i = 0
+            max_i = 0
+
+        contenu = ""
+        for j in range(min_i, max_i + 1):
+            if j == tete:
+                contenu += "[" + ruban.get(j, BLANC) + "]"
+            else:
+                contenu += " " + ruban.get(j, BLANC) + " "
+
+        print(f"Ruban {i} :", contenu)
+
+    print("-" * 30)
+
+
+def simuler_avec_affichage(machine: MT, mot: str) -> Configuration:
+    config = configuration_initiale(machine, mot)
+
+    afficher_configuration(config)
+
+    while config.etat != machine.etat_final:
+        ok = executer_un_pas(machine, config)
+        if not ok:
+            break
+        afficher_configuration(config)
+
+    return config
