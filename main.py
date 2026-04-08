@@ -1,4 +1,4 @@
-from Code.turing_machine import configuration_initiale, executer_un_pas, lire_machine_tms, simuler
+from Code.turing_machine import coder_machine_q7, configuration_initiale, executer_un_pas, lire_machine_tms, simuler
 
 # garder le code et ajouter du code pour executer la question faite
 
@@ -19,3 +19,8 @@ if __name__ == "__main__":
     print("Etat final :", config_finale.etat)
     print("Ruban :", config_finale.rubans)
     print("Têtes :", config_finale.tetes)
+
+   # ------------------- Q7 -------------------
+    print("\nQ7 :")
+    resultat = coder_machine_q7("test/q7.tms")
+    print(resultat)

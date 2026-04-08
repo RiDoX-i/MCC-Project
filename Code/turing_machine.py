@@ -313,3 +313,69 @@ def machine_multiplication_unaire() -> MT:
         {"1", "#", BLANC},
         transitions=transitions,
     )
+
+
+#--------------------------------------------------------- Question 7 ---------------------------------------------------------
+
+
+#--------------------------------------------------------- Question 7 ---------------------------------------------------------
+
+def symbole_vers_codage(symbole: str) -> str:
+    if symbole == BLANC:
+        return "□"
+    if symbole in {"0", "1", "#"}:
+        return symbole
+    raise ValueError(f"Symbole non supporté pour le codage : {symbole}")
+
+
+def mouvement_vers_codage(mouvement: str) -> str:
+    if mouvement == GAUCHE:
+        return "<"
+    if mouvement == IMMOBILE:
+        return "-"
+    if mouvement == DROITE:
+        return ">"
+    raise ValueError(f"Mouvement invalide : {mouvement}")
+
+
+def codage_etats(machine: MT) -> Dict[str, str]:
+    if machine.k != 1:
+        raise ValueError("La question 7 est traitée ici uniquement pour les machines à 1 ruban")
+
+    codes = {
+        machine.etat_initial: "0",
+        machine.etat_final: "1"
+    }
+
+    autres_etats = sorted(
+        etat for etat in machine.etats
+        if etat not in {machine.etat_initial, machine.etat_final}
+    )
+
+    compteur = 2
+    for etat in autres_etats:
+        codes[etat] = format(compteur, "b")
+        compteur += 1
+
+    return codes
+
+
+def coder_machine_q7(path: str) -> str:
+    machine = lire_machine_tms(path)
+
+    if machine.k != 1:
+        raise ValueError("La question 7 est traitée ici uniquement pour les machines à 1 ruban")
+
+    codes = codage_etats(machine)
+    morceaux = []
+
+    for (etat_src, (symbole_lu,)), (etat_dst, (symbole_ecrit,), (mouvement,)) in machine.transitions.items():
+        morceaux.extend([
+            codes[etat_src],
+            symbole_vers_codage(symbole_lu),
+            symbole_vers_codage(symbole_ecrit),
+            mouvement_vers_codage(mouvement),
+            codes[etat_dst]
+        ])
+
+    return "|".join(morceaux)
