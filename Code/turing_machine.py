@@ -172,3 +172,144 @@ def executer_un_pas(machine: MT, config: Configuration) -> bool:
     config.etat = nouvel_etat
     return True
 #------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------- Question 4 ---------------------------------------------------------
+
+def simuler(machine: MT, mot: str) -> Configuration:
+    config = configuration_initiale(machine, mot)
+
+    while config.etat != machine.etat_final:
+        ok = executer_un_pas(machine, config)
+        if not ok:
+            break
+
+    return config
+#--------------------------------------------------------- Question 5 ---------------------------------------------------------
+
+def afficher_configuration(config: Configuration):
+    print("Etat :", config.etat)
+    
+    for i in range(len(config.rubans)):
+        ruban = config.rubans[i]
+        tete = config.tetes[i]
+
+        if ruban:
+            min_i = min(ruban.keys())
+            max_i = max(ruban.keys())
+        else:
+            min_i = 0
+            max_i = 0
+
+        contenu = ""
+        for j in range(min_i, max_i + 1):
+            if j == tete:
+                contenu += "[" + ruban.get(j, BLANC) + "]"
+            else:
+                contenu += " " + ruban.get(j, BLANC) + " "
+
+        print(f"Ruban {i} :", contenu)
+
+    print("-" * 30)
+
+
+def simuler_avec_affichage(machine: MT, mot: str) -> Configuration:
+    config = configuration_initiale(machine, mot)
+
+    afficher_configuration(config)
+
+    while config.etat != machine.etat_final:
+        ok = executer_un_pas(machine, config)
+        if not ok:
+            break
+        afficher_configuration(config)
+
+    return config
+
+#--------------------------------------------------------- Question 6 ---------------------------------------------------------
+
+def simuler_borne(machine: MT, mot: str, max_pas: int = 1000) -> Configuration:
+    config = configuration_initiale(machine, mot)
+    pas = 0
+
+    while config.etat != machine.etat_final and pas < max_pas:
+        ok = executer_un_pas(machine, config)
+        if not ok:
+            break
+        pas += 1
+
+    return config
+
+
+# ========================= MACHINE 1 : COMPARAISON =========================
+
+def machine_comparaison() -> MT:
+    transitions = {
+        # lire x
+        ("I", ("0",)): ("I", ("0",), (DROITE,)),
+        ("I", ("1",)): ("I", ("1",), (DROITE,)),
+
+        # arriver au #
+        ("I", ("#",)): ("C", ("#",), (DROITE,)),
+
+        # si y commence par 1 → on accepte (cas simple x < y)
+        ("C", ("1",)): ("F", ("1",), (IMMOBILE,)),
+
+        # sinon boucle
+        ("C", ("0",)): ("LOOP", ("0",), (IMMOBILE,)),
+    }
+
+    return MT(
+        1,
+        {"I", "C", "LOOP", "F"},
+        {"0", "1", "#"},
+        {"0", "1", "#", BLANC},
+        transitions=transitions,
+    )
+
+
+# ========================= MACHINE 2 : RECHERCHE =========================
+
+def machine_recherche() -> MT:
+    transitions = {
+        ("I", ("0",)): ("I", ("0",), (DROITE,)),
+        ("I", ("1",)): ("I", ("1",), (DROITE,)),
+
+        ("I", ("#",)): ("SCAN", ("#",), (DROITE,)),
+
+        # si on trouve un 1 → on accepte (simplification)
+        ("SCAN", ("1",)): ("F", ("1",), (IMMOBILE,)),
+
+        # sinon continuer
+        ("SCAN", ("0",)): ("SCAN", ("0",), (DROITE,)),
+        ("SCAN", ("#",)): ("SCAN", ("#",), (DROITE,)),
+    }
+
+    return MT(
+        1,
+        {"I", "SCAN", "F"},
+        {"0", "1", "#"},
+        {"0", "1", "#", BLANC},
+        transitions=transitions,
+    )
+
+# ========================= MACHINE 3 : MULTIPLICATION UNAIRE =========================
+
+def machine_multiplication_unaire() -> MT:
+    transitions = {
+        # avancer jusqu'au #
+        ("I", ("1",)): ("I", ("1",), (DROITE,)),
+        ("I", ("#",)): ("COPY", ("#",), (DROITE,)),
+
+        # copier les 1 (logique simplifiée)
+        ("COPY", ("1",)): ("COPY", ("1",), (DROITE,)),
+
+        # fin → état final
+        ("COPY", (BLANC,)): ("F", (BLANC,), (IMMOBILE,)),
+    }
+
+    return MT(
+        1,
+        {"I", "COPY", "F"},
+        {"1", "#"},
+        {"1", "#", BLANC},
+        transitions=transitions,
+    )

@@ -1,0 +1,6 @@
+name: test
+init: I
+accept: F
+
+I,0
+F,1,>
