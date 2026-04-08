@@ -379,3 +379,30 @@ def coder_machine_q7(path: str) -> str:
         ])
 
     return "|".join(morceaux)
+#--------------------------------------------------------- Question 8 ---------------------------------------------------------
+def codage_binaire(symbole: str) -> str:
+    table = {
+        "0": "00",
+        "1": "01",
+        "#": "10",
+        "□": "11",
+        "|": "000",
+        ">": "001",
+        "<": "010",
+        "-": "011"
+    }
+
+    if symbole not in table:
+        raise ValueError(f"Symbole inconnu : {symbole}")
+
+    return table[symbole]
+
+
+def coder_machine_binaire(path: str) -> str:
+    code_q7 = coder_machine_q7(path)
+
+    resultat = ""
+    for c in code_q7:
+        resultat += codage_binaire(c)
+
+    return resultat
