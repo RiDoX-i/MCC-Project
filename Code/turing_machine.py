@@ -315,8 +315,6 @@ def machine_multiplication_unaire() -> MT:
     )
 
 
-#--------------------------------------------------------- Question 7 ---------------------------------------------------------
-
 
 #--------------------------------------------------------- Question 7 ---------------------------------------------------------
 
@@ -406,3 +404,24 @@ def coder_machine_binaire(path: str) -> str:
         resultat += codage_binaire(c)
 
     return resultat
+
+#--------------------------------------------------------- Question 9 ---------------------------------------------------------
+
+def machine_universelle_simulation(path: str, mot: str) -> Configuration:
+    """
+    Version simplifiée de machine universelle :
+    on lit une machine M depuis un fichier
+    et on simule M sur mot
+    """
+    machine = lire_machine_tms(path)
+    return simuler(machine, mot)
+
+
+#--------------------------------------------------------- Question 10 ---------------------------------------------------------
+
+def machine_universelle_bornee(path: str, mot: str, n: int) -> Configuration:
+    """
+    Simulation bornée : on simule M sur mot pendant au plus n étapes
+    """
+    machine = lire_machine_tms(path)
+    return simuler_borne(machine, mot, max_pas=n)
