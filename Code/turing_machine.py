@@ -187,6 +187,7 @@ def simuler(machine: MT, mot: str) -> Configuration:
 
 def afficher_configuration(config: Configuration):
     print("Etat :", config.etat)
+    print("Têtes :", config.tetes)
     
     for i in range(len(config.rubans)):
         ruban = config.rubans[i]
