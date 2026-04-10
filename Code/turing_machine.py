@@ -426,3 +426,14 @@ def machine_universelle_bornee(path: str, mot: str, n: int) -> Configuration:
     """
     machine = lire_machine_tms(path)
     return simuler_borne(machine, mot, max_pas=n)
+
+
+ #--------------------------------------------------------- Question 11 ---------------------------------------------------------
+
+def decide_L1(path: str, n: int) -> bool:
+    if n <= 0:
+        return False
+    mot = "1"
+    config = machine_universelle_bornee(path, mot, n - 1)
+
+    return config.etat == "F"

@@ -1,0 +1,7 @@
+name: q11
+init: I
+accept: F
+
+I,1,F,1,-
+I,0,F,0,-
+I,_,F,_,- 
