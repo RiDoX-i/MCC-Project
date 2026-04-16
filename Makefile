@@ -1,20 +1,38 @@
-PY ?= py
-PYTEST ?= $(PY) -m pytest
-
-.PHONY: test test1 test2 test3 main run
-
-test: test1 test2 test3
+test:
+	python -m pytest
 
 test1:
-	$(PYTEST) test/test1.py
+	python -m pytest test/test1.py
 
 test2:
-	$(PYTEST) test/test2.py
+	python -m pytest test/test2.py
 
 test3:
-	$(PYTEST) test/test3.py
+	python -m pytest test/test3.py
 
-main:
-	$(PY) main.py
+test4:
+	python -m pytest test/test4.py
 
-run: main
+test5:
+	python -m pytest test/test5.py
+
+test6:
+	python -m pytest test/test6.py
+
+test7:
+	python -m pytest test/test7.py
+
+test8:
+	python -m pytest test/test8.py
+
+test9:
+	python -m pytest test/test9.py
+
+test10:
+	python -m pytest test/test10.py
+
+test11:
+	python -m pytest test/test11.py
+
+run:
+	python main.py
