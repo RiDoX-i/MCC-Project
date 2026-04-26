@@ -3,6 +3,7 @@ from Code.turing_machine import coder_machine_q7, configuration_initiale, execut
 # garder le code et ajouter du code pour executer la question faite
 
 if __name__ == "__main__":
+    # ------------------- Q2 -------------------    
     
     machine = lire_machine_tms("test/q2.tms")
 
@@ -24,3 +25,13 @@ if __name__ == "__main__":
     print("\nQ7 :")
     resultat = coder_machine_q7("test/q7.tms")
     print(resultat)
+    # ------------------- Q8 -------------------
+    print("\nQ8 :")
+
+    from Code.turing_machine import coder_machine_binaire
+
+    code_binaire = coder_machine_binaire("test/q2.tms")
+    print("Codage binaire :", code_binaire)
+
+    entier = int(code_binaire, 2)
+    print("Interprétation en entier :", entier)
