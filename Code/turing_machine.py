@@ -171,7 +171,7 @@ def executer_un_pas(machine: MT, config: Configuration) -> bool:
         config.deplacer(i, mouvements[i])
     config.etat = nouvel_etat
     return True
-#------------------------------------------------------------------------------------------------------------------------------
+
 #--------------------------------------------------------- Question 4 ---------------------------------------------------------
 
 def simuler(machine: MT, mot: str) -> Configuration:
