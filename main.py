@@ -1,4 +1,4 @@
-from Code.turing_machine import coder_machine_q7, configuration_initiale, executer_un_pas, lire_machine_tms, simuler
+from Code.turing_machine import coder_machine_q7, configuration_initiale, executer_un_pas, lire_machine_tms, simuler, simuler_avec_affichage
 
 # garder le code et ajouter du code pour executer la question faite
 
@@ -17,6 +17,15 @@ if __name__ == "__main__":
     # ------------------- Q4 -------------------
     config_finale = simuler(machine, "0")
     print("\nQ4 :")
+    print("Etat final :", config_finale.etat)
+    print("Ruban :", config_finale.rubans)
+    print("Têtes :", config_finale.tetes)
+    
+# ------------------- Q5 -------------------
+    print("\nQ5 : Simulation avec affichage\n")
+    config_finale = simuler_avec_affichage(machine, "0")
+
+    print("\nRésultat final :")
     print("Etat final :", config_finale.etat)
     print("Ruban :", config_finale.rubans)
     print("Têtes :", config_finale.tetes)

@@ -335,7 +335,7 @@ def mouvement_vers_codage(mouvement: str) -> str:
     if mouvement == DROITE:
         return ">"
     raise ValueError(f"Mouvement invalide : {mouvement}")
-
+ 
 
 def codage_etats(machine: MT) -> Dict[str, str]:
     if machine.k != 1:
